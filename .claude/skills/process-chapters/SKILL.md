@@ -95,6 +95,7 @@ For each concrete example, case study, or named scenario in the chapter, check w
 **Structure:**
 ```markdown
 ---
+description: "One sentence summary of the example."
 related-concepts:
   - "[[Concept Name]]"
 sources:

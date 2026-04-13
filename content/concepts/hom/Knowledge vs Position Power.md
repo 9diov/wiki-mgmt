@@ -7,6 +7,8 @@ related-concepts:
   - "[[Managers Output ⭐]]"
 sources:
   - "[[14-Chapter_5__Decisions,_Decisions|Chapter 5 — Decisions, Decisions]]"
+tags:
+  - "#concept/knowledge-vs-position-power"
 ---
 
 # Knowledge vs Position Power
