@@ -3,7 +3,7 @@ concept-type: "[[Framework]]"
 description: The two phenomena present in every production system whose combination — not either alone — explains why balanced plants fail and inventory accumulates.
 related-concepts:
   - "[[Balanced Plant Fallacy]]"
-  - "[[Local Optimization Trap]]"
+  - "[[content/concepts/tgl/Local Optimization Trap]]"
   - "[[Throughput, Inventory, and Operating Expense ⭐]]"
 sources:
   - "[[17-Chapter_11|Chapter 11 — New York Breakfast]]"

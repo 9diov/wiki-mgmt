@@ -3,7 +3,7 @@ concept-type: "[[Framework]]"
 description: The near-universal management goal of matching capacity exactly to demand — which Goldratt shows leads to falling throughput and rising inventory.
 related-concepts:
   - "[[Dependent Events and Statistical Fluctuations]]"
-  - "[[Local Optimization Trap]]"
+  - "[[content/concepts/tgl/Local Optimization Trap]]"
   - "[[Goal Formulation]]"
   - "[[Throughput, Inventory, and Operating Expense ⭐]]"
 sources:
@@ -45,6 +45,6 @@ Rogo's plant ran robots at high utilization to justify their cost. The result: p
 
 ## The Broader Principle
 
-The fallacy is a special case of the [[Local Optimization Trap]]: optimizing each resource locally (maximize utilization) produces a globally suboptimal system. The goal is not to keep everyone busy — it is to move the system toward its goal.
+The fallacy is a special case of the [[content/concepts/tgl/Local Optimization Trap]]: optimizing each resource locally (maximize utilization) produces a globally suboptimal system. The goal is not to keep everyone busy — it is to move the system toward its goal.
 
 *Source: Chapter 11*

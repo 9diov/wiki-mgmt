@@ -4,7 +4,7 @@ description: Activating a resource (turning it on) is not the same as utilizing 
 related-concepts:
   - "[[The Constraint ⭐]]"
   - "[[Balance Flow Not Capacity]]"
-  - "[[Local Optimization Trap]]"
+  - "[[content/concepts/tgl/Local Optimization Trap]]"
   - "[[Balanced Plant Fallacy]]"
   - "[[Subordinate and Elevate ⭐]]"
 sources:

@@ -5,7 +5,7 @@ related-concepts:
   - "[[The Goal]]"
   - "[[Throughput, Inventory, and Operating Expense ⭐]]"
   - "[[Financial Measurements]]"
-  - "[[Local Optimization Trap]]"
+  - "[[content/concepts/tgl/Local Optimization Trap]]"
 sources:
   - "[[15-Chapter_9|Chapter 9 — The Robot Audit]]"
 ---

@@ -3,7 +3,7 @@ related-concepts:
   - "[[Exploit the Bottleneck ⭐]]"
   - "[[Subordinate and Elevate ⭐]]"
   - "[[The Constraint ⭐]]"
-  - "[[Local Optimization Trap]]"
+  - "[[Local Optimization Trap (synth)]]"
 ---
 
 # Chapter 21

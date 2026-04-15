@@ -3,7 +3,7 @@ concept-type: "[[Framework]]"
 description: An action is productive only if it brings the company closer to its goal — not if it improves a local metric.
 related-concepts:
   - "[[The Goal]]"
-  - "[[Local Optimization Trap]]"
+  - "[[content/concepts/tgl/Local Optimization Trap]]"
 sources:
   - "[[12-Chapter_4|Chapter 4 — The O'Hare Encounter]]"
 ---

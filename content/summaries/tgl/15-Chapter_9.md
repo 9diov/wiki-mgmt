@@ -2,7 +2,7 @@
 related-concepts:
   - "[[Throughput, Inventory, and Operating Expense ⭐]]"
   - "[[The Goal]]"
-  - "[[Local Optimization Trap]]"
+  - "[[Local Optimization Trap (synth)]]"
   - "[[Goal Formulation]]"
 ---
 
@@ -28,7 +28,7 @@ From this, the goal restated through [[Throughput, Inventory, and Operating Expe
 
 This is the [[Goal Formulation]] — the operational version of "make money." Any action that moves T up and I/OE down is productive. Any action that does the opposite is not.
 
-Back at the plant, Rogo pulls together Lou (controller), Stacey (inventory control), and Bob Donovan (production) to audit the robots. The findings confirm the [[Local Optimization Trap]] in detail:
+Back at the plant, Rogo pulls together Lou (controller), Stacey (inventory control), and Bob Donovan (production) to audit the robots. The findings confirm the [[Local Optimization Trap (synth)]] in detail:
 
 1. Robots launched at 30% efficiency. Finance complained — expensive capital sitting idle.
 2. To raise robot utilization, Stacey released more raw materials to the floor.

@@ -3,7 +3,7 @@ concept-type: "[[Framework]]"
 description: Every company has exactly one goal; productivity is only meaningful when defined relative to it.
 related-concepts:
   - "[[Productivity]]"
-  - "[[Local Optimization Trap]]"
+  - "[[content/concepts/tgl/Local Optimization Trap]]"
   - "[[Means vs. Goal]]"
 sources:
   - "[[12-Chapter_4|Chapter 4 — The O'Hare Encounter]]"

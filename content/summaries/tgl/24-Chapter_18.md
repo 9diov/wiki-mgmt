@@ -4,7 +4,7 @@ related-concepts:
   - "[[Balanced Plant Fallacy]]"
   - "[[Balance Flow Not Capacity]]"
   - "[[Dependent Events and Statistical Fluctuations]]"
-  - "[[Local Optimization Trap]]"
+  - "[[Local Optimization Trap (synth)]]"
 ---
 
 # Chapter 18

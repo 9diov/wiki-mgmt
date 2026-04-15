@@ -4,7 +4,7 @@ description: Goldratt's three operational measurements that bridge daily plant d
 related-concepts:
   - "[[The Goal]]"
   - "[[Financial Measurements]]"
-  - "[[Local Optimization Trap]]"
+  - "[[content/concepts/tgl/Local Optimization Trap]]"
   - "[[Productivity]]"
 sources:
   - "[[14-Chapter_6|Chapter 6 — The Phone Call]]"
@@ -58,6 +58,6 @@ By treating labor as Operating Expense rather than embedded inventory value, the
 
 ## Relationship to Local Optimization
 
-The [[Local Optimization Trap]] exists precisely because conventional metrics optimize local T, I, or OE without asking whether the *system* as a whole is moving toward the goal. Jonah explicitly warns Rogo: "We are not concerned with local optimums." The three measurements always apply to the organization as a whole.
+The [[content/concepts/tgl/Local Optimization Trap]] exists precisely because conventional metrics optimize local T, I, or OE without asking whether the *system* as a whole is moving toward the goal. Jonah explicitly warns Rogo: "We are not concerned with local optimums." The three measurements always apply to the organization as a whole.
 
 *Source: Chapter 6*

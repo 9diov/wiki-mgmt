@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Boy Scout Hike — Dependent Events & Statistical Fluctuations</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #fafafa; color: #2c3e50; padding: 20px; max-width: 900px; margin: 0 auto; }
+  h1 { font-size: 1.3rem; margin-bottom: 4px; }
+  .subtitle { font-size: 0.85rem; color: #777; margin-bottom: 16px; }
+  .tabs { display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap; }
+  .tab { padding: 8px 14px; border: 2px solid #ddd; border-radius: 6px; background: #fff; cursor: pointer; font-size: 0.85rem; font-weight: 500; transition: all 0.15s; }
+  .tab:hover { border-color: #aaa; }
+  .tab.active { border-color: #3498db; background: #ebf5fb; color: #2471a3; }
+  .tab .num { display: inline-block; width: 20px; height: 20px; line-height: 20px; text-align: center; border-radius: 50%; background: #ddd; color: #555; font-size: 0.75rem; margin-right: 4px; }
+  .tab.active .num { background: #3498db; color: #fff; }
+
+  .trail-container { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 12px; margin-bottom: 12px; }
+  canvas#trail { width: 100%; height: 120px; display: block; }
+
+  .metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 12px; }
+  .metric { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 10px 12px; text-align: center; }
+  .metric .label { font-size: 0.75rem; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
+  .metric .value { font-size: 1.4rem; font-weight: 700; margin-top: 2px; }
+  .metric .detail { font-size: 0.75rem; color: #aaa; margin-top: 2px; }
+  .throughput-val { color: #2980b9; }
+  .inventory-val { color: #c0392b; }
+  .tick-val { color: #2c3e50; }
+
+  .chart-container { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 12px; margin-bottom: 12px; }
+  .chart-container h3 { font-size: 0.8rem; color: #888; margin-bottom: 6px; }
+  .charts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  canvas.chart { width: 100%; height: 120px; display: block; }
+
+  .controls { display: flex; gap: 8px; align-items: center; margin-bottom: 16px; flex-wrap: wrap; }
+  .btn { padding: 7px 16px; border: 1px solid #ccc; border-radius: 6px; background: #fff; cursor: pointer; font-size: 0.85rem; transition: all 0.1s; }
+  .btn:hover { background: #f0f0f0; }
+  .btn.primary { background: #3498db; color: #fff; border-color: #3498db; }
+  .btn.primary:hover { background: #2980b9; }
+  .speed-group { margin-left: auto; display: flex; gap: 4px; align-items: center; }
+  .speed-group span { font-size: 0.8rem; color: #888; margin-right: 4px; }
+  .speed-btn { padding: 4px 10px; border: 1px solid #ddd; border-radius: 4px; background: #fff; cursor: pointer; font-size: 0.8rem; }
+  .speed-btn.active { background: #2c3e50; color: #fff; border-color: #2c3e50; }
+
+  .explanation { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 14px 16px; font-size: 0.88rem; line-height: 1.55; color: #444; }
+  .explanation strong { color: #2c3e50; }
+
+  .legend { display: flex; gap: 16px; margin-top: 8px; margin-bottom: 4px; font-size: 0.78rem; color: #888; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 4px; }
+  .legend-dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+
+  .tooltip { position: absolute; background: #2c3e50; color: #fff; padding: 5px 9px; border-radius: 5px; font-size: 0.78rem; pointer-events: none; white-space: nowrap; display: none; z-index: 10; }
+
+  @media (max-width: 640px) {
+    .charts { grid-template-columns: 1fr; }
+    .metrics { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+    .metric .value { font-size: 1.1rem; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Boy Scout Hike</h1>
+<p class="subtitle">Dependent Events & Statistical Fluctuations — The Goal, Ch. 13-15</p>
+
+<div class="tabs">
+  <div class="tab active" data-scenario="1"><span class="num">1</span>Fastest First</div>
+  <div class="tab" data-scenario="2"><span class="num">2</span>Herbie Leads</div>
+  <div class="tab" data-scenario="3"><span class="num">3</span>Pack Redistributed</div>
+</div>
+
+<div class="trail-container">
+  <canvas id="trail"></canvas>
+  <div class="legend">
+    <div class="legend-item"><span class="legend-dot" style="background:#4a90d9"></span> Scout</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#e67e22"></span> Herbie (constraint)</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#2c3e50"></span> Rogo (throughput)</div>
+    <div class="legend-item"><span class="legend-dot" style="border:2px dashed #999;background:none;width:16px;height:1px;border-radius:0"></span> Expected position</div>
+  </div>
+</div>
+
+<div class="metrics">
+  <div class="metric">
+    <div class="label">Throughput</div>
+    <div class="value throughput-val" id="m-throughput">0</div>
+    <div class="detail" id="m-tp-detail">expected: 0</div>
+  </div>
+  <div class="metric">
+    <div class="label">Inventory (gaps)</div>
+    <div class="value inventory-val" id="m-inventory">0</div>
+    <div class="detail">trail-units</div>
+  </div>
+  <div class="metric">
+    <div class="label">Tick</div>
+    <div class="value tick-val" id="m-tick">0</div>
+    <div class="detail" id="m-efficiency">—</div>
+  </div>
+</div>
+
+<div class="chart-container">
+  <div class="charts">
+    <div>
+      <h3>Throughput over time</h3>
+      <canvas class="chart" id="chart-tp"></canvas>
+    </div>
+    <div>
+      <h3>Inventory over time</h3>
+      <canvas class="chart" id="chart-inv"></canvas>
+    </div>
+  </div>
+</div>
+
+<div class="controls">
+  <button class="btn primary" id="btn-play">Play</button>
+  <button class="btn" id="btn-step">Step</button>
+  <button class="btn" id="btn-reset">Reset</button>
+  <div class="speed-group">
+    <span>Speed:</span>
+    <button class="speed-btn" data-speed="600">1x</button>
+    <button class="speed-btn active" data-speed="300">2x</button>
+    <button class="speed-btn" data-speed="100">4x</button>
+  </div>
+</div>
+
+<div class="explanation" id="explanation"></div>
+
+<div class="tooltip" id="tooltip"></div>
+
+<script>
+// --- Constants ---
+const SCOUT_NAMES_S1 = ["Ron","Andy","Ben","Chuck","Dave","Evan","Herbie", "Frank","Greg","Rogo"];
+const SCOUT_NAMES_S2 = ["Herbie","Ron","Andy","Ben","Chuck","Dave","Evan","Frank","Greg","Rogo"];
+
+const COLORS = {
+  normal: "#4a90d9",
+  herbie: "#e67e22",
+  rogo: "#2c3e50",
+  trail: "#e0e0e0",
+  expected: "#999",
+  throughputLine: "#3498db",
+  inventoryFill: "rgba(231,76,60,0.25)",
+  inventoryLine: "#e74c3c"
+};
+
+const EXPLANATIONS = {
+  1: `<strong>Fastest First (Ch. 13)</strong> — Ron sets the pace at the front. Each scout walks as fast as they roll — unless blocked by the scout ahead. Watch Herbie near the back: every time he rolls low, everyone behind him waits. When he rolls high, he can only close the gap ahead — the speed is absorbed. <em>Slowness propagates backward; speed does not.</em> The column stretches inevitably.`,
+  2: `<strong>Herbie Leads (Ch. 15 — Subordinate)</strong> — Herbie now sets the pace for the entire column. No one can pass him. The fast scouts behind have spare capacity — when anyone pauses, the scouts behind close the gap easily. The column stays together. Throughput hasn't increased (it's still Herbie's pace), but <em>inventory has collapsed</em>.`,
+  3: `<strong>Pack Redistributed (Ch. 15 — Elevate)</strong> — Herbie's pack has been shared across the group. His effective pace range is now the same as everyone else's (1–6). The column moves faster <em>and</em> stays together. Throughput is up. Inventory is down. This is "elevate the constraint" — the only action that actually increases system output.`
+};
+
+// --- State ---
+let state = {
+  scenario: 1,
+  tick: 0,
+  scouts: [],
+  throughputHistory: [],
+  inventoryHistory: [],
+  running: false,
+  speed: 300,
+  timer: null
+};
+
+// --- Helpers ---
+function randInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function makeScout(name, isHerbie, minPace, maxPace) {
+  return { name, isHerbie, isRogo: name === "Rogo", minPace, maxPace, position: 0, lastRoll: 0 };
+}
+
+function createScouts(scenario) {
+  const names = scenario === 1 ? SCOUT_NAMES_S1 : SCOUT_NAMES_S2;
+  return names.map(name => {
+    const isHerbie = name === "Herbie";
+    let minPace = 3, maxPace = 4;
+    if (isHerbie && scenario <= 2) { maxPace = 3; }
+    return makeScout(name, isHerbie, minPace, maxPace);
+  });
+}
+
+function resetState(scenario) {
+  state.scenario = scenario || state.scenario;
+  state.tick = 0;
+  state.scouts = createScouts(state.scenario);
+  state.throughputHistory = [0];
+  state.inventoryHistory = [0];
+  stopRunning();
+  render();
+}
+
+function advanceTick() {
+  state.tick++;
+  const scouts = state.scouts;
+  for (let i = 0; i < scouts.length; i++) {
+    const s = scouts[i];
+    const roll = randInt(s.minPace, s.maxPace);
+    s.lastRoll = roll;
+    let newPos = s.position + roll;
+    if (i > 0) {
+      newPos = Math.min(newPos, scouts[i - 1].position);
+    }
+    s.position = newPos;
+  }
+  const last = scouts[scouts.length - 1];
+  state.throughputHistory.push(last.position);
+  let inv = 0;
+  for (let i = 0; i < scouts.length - 1; i++) {
+    inv += scouts[i].position - scouts[i + 1].position;
+  }
+  state.inventoryHistory.push(inv);
+  render();
+}
+
+// --- Rendering ---
+function scaleCanvas(canvas) {
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  const ctx = canvas.getContext("2d");
+  ctx.scale(dpr, dpr);
+  return { ctx, w: rect.width, h: rect.height };
+}
+
+function renderTrail() {
+  const canvas = document.getElementById("trail");
+  const { ctx, w, h } = scaleCanvas(canvas);
+
+  ctx.clearRect(0, 0, w, h);
+
+  const scouts = state.scouts;
+  const frontPos = scouts[0].position;
+  const maxPos = Math.max(frontPos, state.tick * 3.5, 20);
+  const pad = 30;
+  const trackY = h / 2;
+  const trackLeft = pad;
+  const trackRight = w - pad;
+  const trackW = trackRight - trackLeft;
+
+  // Draw trail line
+  ctx.beginPath();
+  ctx.moveTo(trackLeft, trackY);
+  ctx.lineTo(trackRight, trackY);
+  ctx.strokeStyle = COLORS.trail;
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Draw expected position marker
+  const expectedPos = state.tick * 3.5;
+  const expX = trackLeft + (expectedPos / maxPos) * trackW;
+  ctx.beginPath();
+  ctx.setLineDash([4, 4]);
+  ctx.moveTo(expX, trackY - 28);
+  ctx.lineTo(expX, trackY + 28);
+  ctx.strokeStyle = COLORS.expected;
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = COLORS.expected;
+  ctx.font = "10px sans-serif";
+  ctx.textAlign = "center";
+  ctx.fillText("expected", expX, trackY + 42);
+
+  // Draw scouts (back to front so front is on top)
+  const radius = 14;
+  const scoutPositions = []; // for tooltip
+  for (let i = scouts.length - 1; i >= 0; i--) {
+    const s = scouts[i];
+    const x = trackLeft + (s.position / maxPos) * trackW;
+    const y = trackY;
+
+    scoutPositions[i] = { x, y, scout: s };
+
+    ctx.beginPath();
+    ctx.arc(x, y, radius, 0, Math.PI * 2);
+    if (s.isHerbie) {
+      ctx.fillStyle = COLORS.herbie;
+    } else if (s.isRogo) {
+      ctx.fillStyle = "#fff";
+      ctx.fill();
+      ctx.strokeStyle = COLORS.rogo;
+      ctx.lineWidth = 2.5;
+      ctx.stroke();
+      ctx.fillStyle = COLORS.rogo;
+      ctx.font = "bold 11px sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(s.name[0], x, y);
+      // label above
+      ctx.font = "10px sans-serif";
+      ctx.fillStyle = "#888";
+      ctx.fillText(s.name, x, y - radius - 6);
+      if (s.lastRoll > 0) {
+        ctx.fillText("+" + s.lastRoll, x, y + radius + 12);
+      }
+      continue;
+    } else {
+      ctx.fillStyle = COLORS.normal;
+    }
+    ctx.fill();
+
+    // Letter
+    ctx.fillStyle = "#fff";
+    ctx.font = "bold 11px sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(s.name[0], x, y);
+
+    // Name above
+    ctx.font = "10px sans-serif";
+    ctx.fillStyle = "#888";
+    ctx.fillText(s.name, x, y - radius - 6);
+
+    // Roll below
+    if (s.lastRoll > 0) {
+      ctx.fillStyle = "#aaa";
+      ctx.fillText("+" + s.lastRoll, x, y + radius + 12);
+    }
+  }
+
+  // Store positions for tooltip
+  canvas._scoutPositions = scoutPositions;
+}
+
+function renderChart(canvasId, data, color, fillColor, expectedSlope) {
+  const canvas = document.getElementById(canvasId);
+  const { ctx, w, h } = scaleCanvas(canvas);
+  ctx.clearRect(0, 0, w, h);
+
+  if (data.length < 2) return;
+
+  const pad = 4;
+  const cw = w - pad * 2;
+  const ch = h - pad * 2;
+  const maxX = Math.max(data.length - 1, 1);
+
+  // Determine y range
+  let maxY = 0;
+  for (let i = 0; i < data.length; i++) {
+    if (data[i] > maxY) maxY = data[i];
+  }
+  if (expectedSlope) {
+    const expMax = expectedSlope * maxX;
+    if (expMax > maxY) maxY = expMax;
+  }
+  maxY = Math.max(maxY, 10);
+
+  function px(i) { return pad + (i / maxX) * cw; }
+  function py(v) { return pad + ch - (v / maxY) * ch; }
+
+  // Expected line
+  if (expectedSlope) {
+    ctx.beginPath();
+    ctx.setLineDash([4, 4]);
+    ctx.moveTo(px(0), py(0));
+    ctx.lineTo(px(maxX), py(expectedSlope * maxX));
+    ctx.strokeStyle = COLORS.expected;
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  // Fill area
+  if (fillColor) {
+    ctx.beginPath();
+    ctx.moveTo(px(0), py(data[0]));
+    for (let i = 1; i < data.length; i++) {
+      ctx.lineTo(px(i), py(data[i]));
+    }
+    ctx.lineTo(px(data.length - 1), py(0));
+    ctx.lineTo(px(0), py(0));
+    ctx.closePath();
+    ctx.fillStyle = fillColor;
+    ctx.fill();
+  }
+
+  // Data line
+  ctx.beginPath();
+  ctx.moveTo(px(0), py(data[0]));
+  for (let i = 1; i < data.length; i++) {
+    ctx.lineTo(px(i), py(data[i]));
+  }
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2;
+  ctx.stroke();
+}
+
+function renderMetrics() {
+  const last = state.scouts[state.scouts.length - 1];
+  const tp = last.position;
+  const expected = Math.round(state.tick * 3.5);
+  document.getElementById("m-throughput").textContent = tp;
+  document.getElementById("m-tp-detail").textContent = `expected: ${expected}`;
+
+  const inv = state.inventoryHistory[state.inventoryHistory.length - 1] || 0;
+  document.getElementById("m-inventory").textContent = inv;
+
+  document.getElementById("m-tick").textContent = state.tick;
+
+  if (state.tick > 0) {
+    const eff = Math.round((tp / expected) * 100);
+    document.getElementById("m-efficiency").textContent = `${eff}% of expected`;
+  } else {
+    document.getElementById("m-efficiency").textContent = "—";
+  }
+}
+
+function renderExplanation() {
+  document.getElementById("explanation").innerHTML = EXPLANATIONS[state.scenario];
+}
+
+function render() {
+  renderTrail();
+  renderChart("chart-tp", state.throughputHistory, COLORS.throughputLine, null, 3.5);
+  renderChart("chart-inv", state.inventoryHistory, COLORS.inventoryLine, COLORS.inventoryFill, null);
+  renderMetrics();
+}
+
+// --- Controls ---
+function stopRunning() {
+  state.running = false;
+  clearInterval(state.timer);
+  state.timer = null;
+  document.getElementById("btn-play").textContent = "Play";
+  document.getElementById("btn-play").classList.add("primary");
+}
+
+function startRunning() {
+  state.running = true;
+  document.getElementById("btn-play").textContent = "Pause";
+  document.getElementById("btn-play").classList.remove("primary");
+  state.timer = setInterval(() => {
+    advanceTick();
+    if (state.tick >= 60) stopRunning();
+  }, state.speed);
+}
+
+document.getElementById("btn-play").addEventListener("click", () => {
+  if (state.running) stopRunning();
+  else startRunning();
+});
+
+document.getElementById("btn-step").addEventListener("click", () => {
+  stopRunning();
+  advanceTick();
+});
+
+document.getElementById("btn-reset").addEventListener("click", () => {
+  resetState();
+});
+
+// Tabs
+document.querySelectorAll(".tab").forEach(tab => {
+  tab.addEventListener("click", () => {
+    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+    tab.classList.add("active");
+    resetState(parseInt(tab.dataset.scenario));
+    renderExplanation();
+  });
+});
+
+// Speed buttons
+document.querySelectorAll(".speed-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".speed-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    state.speed = parseInt(btn.dataset.speed);
+    if (state.running) {
+      clearInterval(state.timer);
+      state.timer = setInterval(() => {
+        advanceTick();
+        if (state.tick >= 60) stopRunning();
+      }, state.speed);
+    }
+  });
+});
+
+// Tooltip
+const trailCanvas = document.getElementById("trail");
+const tooltip = document.getElementById("tooltip");
+
+trailCanvas.addEventListener("mousemove", (e) => {
+  const rect = trailCanvas.getBoundingClientRect();
+  const mx = e.clientX - rect.left;
+  const my = e.clientY - rect.top;
+  const positions = trailCanvas._scoutPositions;
+  if (!positions) return;
+
+  let found = null;
+  for (let i = 0; i < positions.length; i++) {
+    if (!positions[i]) continue;
+    const dx = mx - positions[i].x;
+    const dy = my - positions[i].y;
+    if (dx * dx + dy * dy < 16 * 16) {
+      found = positions[i].scout;
+      break;
+    }
+  }
+
+  if (found) {
+    const pace = found.isHerbie && state.scenario <= 2 ? "1–4" : "1–6";
+    tooltip.innerHTML = `<strong>${found.name}</strong> | Pace: ${pace} | Roll: ${found.lastRoll || "—"} | Pos: ${found.position}`;
+    tooltip.style.display = "block";
+    tooltip.style.left = (e.clientX + 12) + "px";
+    tooltip.style.top = (e.clientY - 30) + "px";
+  } else {
+    tooltip.style.display = "none";
+  }
+});
+
+trailCanvas.addEventListener("mouseleave", () => {
+  tooltip.style.display = "none";
+});
+
+// Resize
+window.addEventListener("resize", () => render());
+
+// Init
+resetState(1);
+renderExplanation();
+</script>
+</body>
+</html>

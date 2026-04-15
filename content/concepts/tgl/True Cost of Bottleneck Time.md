@@ -5,7 +5,7 @@ related-concepts:
   - "[[The Constraint ⭐]]"
   - "[[Exploit the Bottleneck ⭐]]"
   - "[[Throughput, Inventory, and Operating Expense ⭐]]"
-  - "[[Local Optimization Trap]]"
+  - "[[content/concepts/tgl/Local Optimization Trap]]"
 sources:
   - "[[25-Chapter_19|Chapter 19 — Jonah's Plant Visit]]"
 ---

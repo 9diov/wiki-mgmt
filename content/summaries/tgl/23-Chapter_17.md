@@ -1,7 +1,7 @@
 ---
 related-concepts:
   - "[[Dependent Events and Statistical Fluctuations]]"
-  - "[[Local Optimization Trap]]"
+  - "[[Local Optimization Trap (synth)]]"
   - "[[The Constraint ⭐]]"
   - "[[Subordinate and Elevate ⭐]]"
 ---

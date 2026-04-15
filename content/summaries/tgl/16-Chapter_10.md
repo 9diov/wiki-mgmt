@@ -3,7 +3,7 @@ related-concepts:
   - "[[Throughput, Inventory, and Operating Expense ⭐]]"
   - "[[Goal Formulation]]"
   - "[[The Goal]]"
-  - "[[Local Optimization Trap]]"
+  - "[[Local Optimization Trap (synth)]]"
 ---
 
 # Chapter 10

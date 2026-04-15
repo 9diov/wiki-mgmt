@@ -27,7 +27,7 @@ The critical implication: **non-constraints should run below their maximum capac
 
 Once the system is subordinated to the constraint, increasing the constraint's capacity directly increases system throughput.
 
-In the hike: redistribute Herbie's pack. He's been carrying a skillet, canned food, a shovel — weight that slowed him and, through him, slowed everyone. Taking the load off Herbie doubles the troop's effective speed.
+In [[Boy Scout Hike ⭐]]: redistribute Herbie's pack. He's been carrying a skillet, canned food, a shovel — weight that slowed him and, through him, slowed everyone. Taking the load off Herbie doubles the troop's effective speed.
 
 Adding capacity to a non-constraint does nothing. Adding weight to Andy (the fastest boy) makes no difference to the troop's speed — Andy was not limiting the system. Only elevating the constraint — the actual limit — changes the system output.
 

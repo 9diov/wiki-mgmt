@@ -1,6 +1,6 @@
 ---
 related-concepts:
-  - "[[Local Optimization Trap]]"
+  - "[[Local Optimization Trap (synth)]]"
   - "[[Throughput, Inventory, and Operating Expense ⭐]]"
   - "[[Productivity]]"
   - "[[The Goal]]"
@@ -26,7 +26,7 @@ Jonah's verdict: the robots did not improve productivity. By the only definition
 
 ## What It Illustrates
 
-**[[Local Optimization Trap]]** — The robots are the clearest example in the book of a local metric (departmental efficiency, utilization rate) being treated as a proxy for system performance. The department looks excellent — 36% productivity gain. The plant is no better off. This is the trap: optimizing a part of a system without measuring the effect on the whole. High local efficiency can actively harm system performance by creating inventory without increasing throughput.
+**[[Local Optimization Trap (synth)]]** — The robots are the clearest example in the book of a local metric (departmental efficiency, utilization rate) being treated as a proxy for system performance. The department looks excellent — 36% productivity gain. The plant is no better off. This is the trap: optimizing a part of a system without measuring the effect on the whole. High local efficiency can actively harm system performance by creating inventory without increasing throughput.
 
 **[[Productivity]]** — Jonah's definition: productive = moves toward the goal. The robot audit is the first time this definition is applied as a diagnostic tool. Rogo assumed "more efficient" meant "more productive." The three questions expose that assumption: if shipping didn't increase, headcount didn't decrease, and inventory didn't fall, the robots didn't move the plant toward the goal. They were an expensive way to move work in progress from one pile to another.
 

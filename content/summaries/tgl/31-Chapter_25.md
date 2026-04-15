@@ -3,7 +3,7 @@ related-concepts:
   - "[[The Constraint ⭐]]"
   - "[[Activation vs Utilization]]"
   - "[[Balance Flow Not Capacity]]"
-  - "[[Local Optimization Trap]]"
+  - "[[Local Optimization Trap (synth)]]"
   - "[[Balanced Plant Fallacy]]"
 ---
 

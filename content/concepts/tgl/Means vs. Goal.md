@@ -4,7 +4,7 @@ description: Operational objectives like quality, efficiency, and technology are
 related-concepts:
   - "[[The Goal]]"
   - "[[Productivity]]"
-  - "[[Local Optimization Trap]]"
+  - "[[content/concepts/tgl/Local Optimization Trap]]"
 sources:
   - "[[13-Chapter_5|Chapter 5 — The Hillside]]"
 ---
@@ -42,6 +42,6 @@ When means are mistaken for goals, the organization:
 - Defends activities that feel productive but move the company away from making money
 - Loses the ability to make trade-offs, because everything looks like an equal priority
 
-The [[Local Optimization Trap]] is, in part, a consequence of this confusion: high utilization and efficiency are treated as ends in themselves, so machines run constantly generating inventory that clogs the system and prevents shipments — the one activity that actually produces revenue.
+The [[content/concepts/tgl/Local Optimization Trap]] is, in part, a consequence of this confusion: high utilization and efficiency are treated as ends in themselves, so machines run constantly generating inventory that clogs the system and prevents shipments — the one activity that actually produces revenue.
 
 *Source: Chapter 5*
